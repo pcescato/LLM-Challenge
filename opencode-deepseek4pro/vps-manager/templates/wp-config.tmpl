@@ -1,0 +1,83 @@
+<?php
+/**
+ * WordPress configuration — managed by vpsmgr
+ * Generated: {{ generated_at }}
+ *
+ * Database settings
+ */
+define( 'DB_NAME',     '{{ db_name }}' );
+define( 'DB_USER',     '{{ db_user }}' );
+define( 'DB_PASSWORD', '{{ db_password }}' );
+define( 'DB_HOST',     '{{ db_host|default("localhost") }}' );
+define( 'DB_CHARSET',  'utf8mb4' );
+define( 'DB_COLLATE',  '' );
+
+/**
+ * Authentication unique keys and salts
+ * Generated from https://api.wordpress.org/secret-key/1.1/salt/
+ */
+{{ salts }}
+
+/**
+ * WordPress database table prefix
+ */
+$table_prefix = '{{ table_prefix|default("wp_") }}';
+
+/**
+ * WordPress debugging mode
+ */
+define( 'WP_DEBUG', {{ wp_debug|default("false") }} );
+define( 'WP_DEBUG_LOG', false );
+define( 'WP_DEBUG_DISPLAY', false );
+
+/**
+ * Site and home URLs
+ */
+define( 'WP_SITEURL', 'https://{{ domain }}' );
+define( 'WP_HOME',    'https://{{ domain }}' );
+
+/**
+ * SSL
+ */
+define( 'FORCE_SSL_ADMIN', true );
+
+/**
+ * Memory limits
+ */
+define( 'WP_MEMORY_LIMIT',     '{{ wp_memory_limit|default("256M") }}' );
+define( 'WP_MAX_MEMORY_LIMIT', '{{ wp_max_memory_limit|default("512M") }}' );
+
+/**
+ * Filesystem method — direct writes
+ */
+define( 'FS_METHOD', 'direct' );
+
+/**
+ * Security hardening
+ */
+define( 'DISALLOW_FILE_EDIT', true );
+define( 'DISALLOW_FILE_MODS', true );
+
+/**
+ * Automatic updates
+ */
+define( 'WP_AUTO_UPDATE_CORE', 'minor' );
+define( 'AUTOMATIC_UPDATER_DISABLED', false );
+
+/**
+ * Cron
+ */
+define( 'DISABLE_WP_CRON', false );
+
+/**
+ * Post revisions
+ */
+define( 'WP_POST_REVISIONS', {{ wp_post_revisions|default(10) }} );
+
+/* Absolute path to the WordPress directory */
+if ( ! defined( 'ABSPATH' ) ) {
+    define( 'ABSPATH', __DIR__ . '/' );
+}
+
+/* Sets up WordPress vars and included files */
+require_once ABSPATH . 'wp-settings.php';

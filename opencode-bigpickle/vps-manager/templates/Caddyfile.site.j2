@@ -1,0 +1,14 @@
+{{ domain }} {
+    root * {{ webroot }}
+    file_server
+{% if php_enable == "true" %}
+    php_fastcgi {{ php_fpm_addr }}
+{% endif %}
+    encode gzip
+    header {
+        -Server
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "strict-origin-when-cross-origin"
+    }
+}

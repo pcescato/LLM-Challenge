@@ -1,0 +1,19 @@
+[Unit]
+Description=vps-manager daily backup (all sites) + prune
+Documentation=file:///opt/vps-manager/README.md
+After=network-online.target mariadb.service postgresql.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+WorkingDirectory=/opt/vps-manager
+ExecStart=/opt/vps-manager/scripts/backup.sh --all
+# Pruning happens inside backup.sh per-site (find -mtime +N).
+# No secrets are logged: backup.sh redacts and archives are 0600 (D8).
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,61 @@
+<?php
+/**
+ * WordPress configuration for {{ db_host_name }} — managed by vps-manager.
+ * File permissions 0600, owned by the site user. Never edit by hand.
+ *
+ * IMPORTANT: this file contains a DB password. It is written directly into
+ * the application's own config (NOT into toolkit state) and is never logged.
+ */
+
+// ** Database settings ** //
+define( 'DB_NAME',     '{{ db_name }}' );
+define( 'DB_USER',     '{{ db_user }}' );
+define( 'DB_PASSWORD', '{{ db_pass }}' );
+define( 'DB_HOST',     '{{ db_host }}' );
+define( 'DB_CHARSET',  'utf8mb4' );
+define( 'DB_COLLATE',  'utf8mb4_unicode_ci' );
+
+/**
+ * Authentication unique keys and salts.
+ * Generated fresh per-site at creation time.
+ */
+{{ salts }}
+
+/**
+ * WordPress database table prefix.
+ */
+$table_prefix = 'wp_';
+
+/**
+ * WordPress debugging — production defaults.
+ */
+define( 'WP_DEBUG', false );
+define( 'WP_DEBUG_DISPLAY', false );
+define( 'WP_DEBUG_LOG', false );
+
+/**
+ * Disable file editing from the admin UI (hardening).
+ */
+define( 'DISALLOW_FILE_EDIT', true );
+
+/**
+ * Limit revisions to a sane number.
+ */
+define( 'WP_POST_REVISIONS', 5 );
+
+/**
+ * Force SSL for admin.
+ */
+define( 'FORCE_SSL_ADMIN', true );
+
+/**
+ * Prevent cron from running on every request (use a real cron job).
+ */
+define( 'DISABLE_WP_CRON', false );
+
+/** Absolute path to the WordPress directory. */
+if ( ! defined( 'ABSPATH' ) ) {
+    define( 'ABSPATH', __DIR__ . '/' );
+}
+
+require_once ABSPATH . 'wp-settings.php';

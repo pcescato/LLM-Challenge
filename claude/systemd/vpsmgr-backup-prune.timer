@@ -1,0 +1,25 @@
+[Unit]
+Description=VPS Manager Backup Pruning Timer
+Documentation=https://github.com/example/vps-manager
+Requires=vpsmgr-backup-prune.service
+
+[Timer]
+# Run daily at 2:00 AM
+OnCalendar=daily
+OnCalendar=*-*-* 02:00:00
+
+# Run if system was off at scheduled time
+Persistent=true
+
+# Run on boot if missed
+OnBootSec=5min
+
+# Randomize by up to 30 seconds to avoid thundering herd
+RandomizedDelaySec=30
+
+# Options
+Unit=vpsmgr-backup-prune.service
+Accuracy=5min
+
+[Install]
+WantedBy=timers.target

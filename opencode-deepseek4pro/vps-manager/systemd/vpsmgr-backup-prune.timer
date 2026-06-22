@@ -1,0 +1,10 @@
+[Unit]
+Description=VPS Manager backup pruning
+Documentation=https://github.com/vpsmgr/vpsmgr
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target

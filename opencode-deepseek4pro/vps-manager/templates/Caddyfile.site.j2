@@ -1,0 +1,43 @@
+{{ domain }} {
+{%- if site_type == "static" %}
+    root * {{ webroot }}
+    file_server
+{%- elif site_type == "php" %}
+    root * {{ webroot }}
+    php_fastcgi unix//run/php/php{{ php_version }}-fpm-{{ sftp_user }}.sock {
+        root {{ webroot }}
+    }
+    file_server
+{%- elif site_type == "wordpress" %}
+    root * {{ webroot }}
+    php_fastcgi unix//run/php/php{{ php_version }}-fpm-{{ sftp_user }}.sock {
+        root {{ webroot }}
+    }
+    file_server
+
+    @wp_paths {
+        not path /wp-admin/* /wp-login* /wp-content/* /wp-includes/*
+        not file
+    }
+    redir @wp_paths /index.php{uri}
+{%- elif site_type == "proxy" %}
+    reverse_proxy {{ proxy_target }}
+{%- endif %}
+    encode gzip zstd
+    header {
+        X-Content-Type-Options nosniff
+        X-Frame-Options DENY
+{%- if site_type == "wordpress" %}
+        Referrer-Policy no-referrer-when-downgrade
+{%- endif %}
+    }
+{%- if site_type == "wordpress" %}
+    # WordPress security: block sensitive files
+    @blocked {
+        path /xmlrpc.php
+        path /wp-config.php
+        path /wp-content/debug.log
+    }
+    respond @blocked 403
+{%- endif %}
+}

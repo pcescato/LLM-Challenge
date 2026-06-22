@@ -1,0 +1,15 @@
+[Unit]
+Description=VPS Manager API
+After=network.target
+
+[Service]
+Type=simple
+User=root
+ExecStart=/usr/local/bin/vpsmgr-api
+Restart=on-failure
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+Environment=VPSMGR_CONFIG=/etc/vpsmgr/vpsmgr.conf
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,39 @@
+[Unit]
+Description=VPS Manager Backup Pruning Service
+Documentation=https://github.com/example/vps-manager
+After=network.target
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+
+# Working directory
+WorkingDirectory=/var/backups/vpsmgr
+
+# Environment
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+EnvironmentFile=/etc/vpsmgr/vpsmgr.conf
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=vpsmgr-backup-prune
+
+# Execute backup pruning
+ExecStart=/bin/bash -c 'find /var/backups/vpsmgr -type f -mtime +${BACKUP_RETENTION_DAYS:-30} -delete'
+
+# Security
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/backups/vpsmgr /var/log/vpsmgr
+ProtectKernelTunables=true
+ProtectControlGroups=true
+ProtectKernelLogs=true
+
+# Restart not needed for oneshot
+Restart=no
+
+[Install]
+WantedBy=multi-user.target

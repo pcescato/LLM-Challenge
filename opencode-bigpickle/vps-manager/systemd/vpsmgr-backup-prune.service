@@ -1,0 +1,12 @@
+[Unit]
+Description=VPS Manager backup pruning
+After=network.target
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/usr/local/bin/vpsmgr-backup-prune.sh
+Environment=VPSMGR_CONFIG=/etc/vpsmgr/vpsmgr.conf
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,103 @@
+# Caddy site configuration template
+# Variables: domain, webroot, site_type, php_version (if applicable)
+
+{{ domain }} {
+    # Log configuration
+    log {
+        output file /var/log/caddy/{{ domain }}-access.log {
+            roll_size 100mb
+            roll_keep 10
+            roll_keep_for 720h
+        }
+    }
+
+    # Error log
+    errors /var/log/caddy/{{ domain }}-error.log {
+        roll_size 100mb
+        roll_keep 10
+        roll_keep_for 720h
+    }
+
+    # Security headers (all site types)
+    header / Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    header / X-Content-Type-Options nosniff
+    header / X-Frame-Options DENY
+    header / X-XSS-Protection "1; mode=block"
+    header / Referrer-Policy strict-origin-when-cross-origin
+    header / Permissions-Policy "geolocation=(), microphone=(), camera=()"
+
+    # Content encoding
+    encode gzip
+
+    # Site type specific configuration
+    {% if site_type == "static" %}
+    # Static site
+    root * {{ webroot }}
+    file_server
+
+    {% elif site_type == "php" %}
+    # PHP site
+    root * {{ webroot }}
+    php_fastcgi unix//run/php/php{{ php_version }}-fpm.sock {
+        env SCRIPT_FILENAME {http.request.uri.path}
+    }
+    file_server
+
+    # Try index files
+    try_files {path} {path}/ /index.php?{query}
+
+    {% elif site_type == "wordpress" %}
+    # WordPress site (served from /wordpress subdirectory)
+    root * {{ webroot }}
+    file_server
+
+    # WordPress specific rules
+    @wordpress {
+        path_regexp ^/wordpress(/|$)
+    }
+
+    handle @wordpress {
+        # Rewrite URLs for WordPress
+        rewrite /wordpress/* /wordpress/index.php
+        php_fastcgi unix//run/php/php{{ php_version }}-fpm.sock {
+            env SCRIPT_FILENAME {http.request.uri.path}
+        }
+    }
+
+    # Direct access to /wordpress/wp-admin, etc.
+    @admin {
+        path /wordpress/wp-admin /wordpress/wp-login.php
+    }
+
+    handle @admin {
+        php_fastcgi unix//run/php/php{{ php_version }}-fpm.sock
+    }
+
+    {% elif site_type == "proxy" %}
+    # Reverse proxy site (target configured via API)
+    reverse_proxy {{ proxy_target }} {
+        # Preserve original headers
+        header_up X-Real-IP {http.request.remote}
+        header_up X-Forwarded-For {http.request.remote}
+        header_up X-Forwarded-Proto {http.request.scheme}
+        header_up X-Forwarded-Host {http.request.host}
+
+        # Websocket support
+        transport http {
+            dial_timeout 30s
+            read_timeout 30s
+            write_timeout 30s
+        }
+    }
+    {% endif %}
+
+    # HTTPS automatic (Caddy handles Let's Encrypt)
+    tls {
+        # Prefer modern TLS version
+        protocols tls1.2 tls1.3
+        ciphers TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 \
+                TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 \
+                TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 \
+                TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+    }
+}

@@ -1,0 +1,67 @@
+[Unit]
+Description=VPS Manager API Service
+After=network-online.target
+Wants=network-online.target
+Documentation=https://github.com/example/vps-manager
+
+[Service]
+Type=notify
+User=root
+Group=root
+
+# Working directory
+WorkingDirectory=/usr/local/lib/vpsmgr
+
+# Environment variables
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+EnvironmentFile=/etc/vpsmgr/vpsmgr.conf
+EnvironmentFile=-/etc/vpsmgr/api.env
+
+# API binding (localhost only, design decision D2)
+Environment="VPSMGR_API_HOST=127.0.0.1"
+Environment="VPSMGR_API_PORT=8000"
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=vpsmgr-api
+
+# Security hardening
+PrivateTmp=true
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/vpsmgr /var/log/vpsmgr /var/backups/vpsmgr /etc/caddy/sites /etc/php
+ProtectKernelTunables=true
+ProtectControlGroups=true
+ProtectKernelLogs=true
+ProtectClock=true
+RestrictNamespaces=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+LockPersonality=true
+SystemCallFilter=@system-service
+SystemCallArchitectures=native
+
+# Restart policy
+Restart=on-failure
+RestartSec=10
+StartLimitInterval=300
+StartLimitBurst=5
+
+# Process management
+ExecStart=/usr/bin/python3 -m uvicorn main:app \
+    --host 127.0.0.1 \
+    --port 8000 \
+    --workers 4 \
+    --log-level info \
+    --access-log
+
+ExecReload=/bin/kill -HUP $MAINPID
+
+# Timeouts
+TimeoutStartSec=30
+TimeoutStopSec=30
+
+[Install]
+WantedBy=multi-user.target

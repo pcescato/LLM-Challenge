@@ -1,0 +1,13 @@
+[Unit]
+Description=vps-manager daily backup + prune timer
+Documentation=file:///opt/vps-manager/README.md
+
+[Timer]
+# Run daily at 03:00 local time. Backup.sh prunes archives older than
+# VPSMGR_BACKUP_RETENTION_DAYS as part of each run.
+OnCalendar=*-*-* 03:00:00
+Persistent=true
+RandomizedDelaySec=300
+
+[Install]
+WantedBy=timers.target

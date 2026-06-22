@@ -1,0 +1,27 @@
+[Unit]
+Description=VPS Manager API
+Documentation=https://github.com/vpsmgr/vpsmgr
+After=network.target
+
+[Service]
+Type=simple
+User=vpsmgr-api
+Group=vpsmgr-api
+WorkingDirectory=/usr/local/lib/vpsmgr
+ExecStart=/usr/local/lib/vpsmgr/venv/bin/uvicorn api.main:app --host 127.0.0.1 --port 8000 --no-access-log
+Restart=on-failure
+RestartSec=5s
+
+# Security hardening
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ReadWritePaths=/var/lib/vpsmgr /var/log/vpsmgr /var/backups/vpsmgr
+ReadOnlyPaths=/etc/vpsmgr /usr/local/lib/vpsmgr
+
+# Rate limiting
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target

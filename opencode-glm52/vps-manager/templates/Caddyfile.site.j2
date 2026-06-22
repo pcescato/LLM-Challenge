@@ -1,0 +1,26 @@
+# {{ domain }} — managed by vps-manager. Do not edit by hand.
+# Site type: {{ site_type }}
+
+{{ domain }} {
+	encode gzip zstd
+
+{{ body }}
+
+	# Reasonable defaults
+	header {
+		-Server
+		X-Content-Type-Options nosniff
+		X-Frame-Options SAMEORIGIN
+		Referrer-Policy strict-origin-when-cross-origin
+	}
+
+	log {
+		output file /var/log/caddy/{{ domain }}.log {
+			roll_size 10mb
+			roll_keep 5
+		}
+		format console
+	}
+
+	# ACME handled automatically by Caddy; no manual tls block needed.
+}

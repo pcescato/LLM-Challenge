@@ -1,0 +1,32 @@
+[Unit]
+Description=vps-manager API (loopback only)
+Documentation=file:///opt/vps-manager/README.md
+After=network-online.target caddy.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+WorkingDirectory=/opt/vps-manager
+Environment=VPSMGR_API_HOST=127.0.0.1
+Environment=VPSMGR_API_PORT=8000
+Environment=VPSMGR_SCRIPTS_DIR=/opt/vps-manager/scripts
+Environment=VPSMGR_STATE_DIR=/var/lib/vpsmgr/sites
+Environment=VPSMGR_BACKUP_DIR=/var/backups/vpsmgr
+Environment=VPSMGR_API_TOKEN_FILE=/etc/vpsmgr/api.token
+ExecStart=/opt/vps-manager/venv/bin/uvicorn api.main:app \
+    --host 127.0.0.1 --port 8000 --workers 1
+Restart=on-failure
+RestartSec=3
+# Hardening
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/var/lib/vpsmgr /var/log/vpsmgr /var/backups/vpsmgr /etc/vpsmgr
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=multi-user.target
