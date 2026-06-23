@@ -1,0 +1,16 @@
+[Unit]
+Description=VPS Manager API
+After=network.target
+
+[Service]
+Type=simple
+User=vpsmgr-api
+Group=vpsmgr-api
+WorkingDirectory=/opt/vpsmgr/api
+Environment=VPSMGR_ROOT=/opt/vpsmgr
+EnvironmentFile=-/etc/vpsmgr/vpsmgr.env
+ExecStart=/opt/vpsmgr/venv/bin/uvicorn main:app --host 127.0.0.1 --port 8000
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
