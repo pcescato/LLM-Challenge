@@ -1,11 +1,14 @@
-# VPS Manager — Comparative Code Review
+# VPS Manager — Blind Comparative Code Review
 
 You are a senior Linux systems engineer and Python developer.
 You have been given four independent implementations of the same VPS
 management toolkit, produced by four different AI coding agents.
-Your task is to evaluate them objectively and comparatively.
+The implementations are identified only as model-1, model-2, model-3,
+and model-4. You have no information about which tool or model produced
+each implementation.
 
-Do NOT favor any implementation. Cite specific code in your analysis.
+Your task is to evaluate them objectively and comparatively.
+Do NOT speculate about authorship. Cite specific code in your analysis.
 Score each criterion 1–5 for each implementation.
 
 ---
@@ -23,10 +26,10 @@ A minimal VPS management toolkit for Ubuntu 24.04:
 
 ## Implementations under review
 
-- **A** — `opencode-bigpickle/vps-manager/`
-- **B** — `claude/vps-manager/`
-- **C** — `opencode-glm52/vps-manager/`
-- **D** — `opencode-deepseek4pro/vps-manager/`
+- **model-1** — `model-1/vps-manager/`
+- **model-2** — `model-2/vps-manager/`
+- **model-3** — `model-3/vps-manager/`
+- **model-4** — `model-4/vps-manager/`
 
 ---
 
@@ -92,14 +95,14 @@ per implementation. Cite code directly.
 
 ### Scoring table
 
-| Criterion | A (BigPickle) | B (Claude) | C (GLM 5.2) | D (DeepSeek) |
-|-----------|---------------|------------|-------------|--------------|
-| Security | /5 | /5 | /5 | /5 |
-| Correctness | /5 | /5 | /5 | /5 |
-| Idempotency | /5 | /5 | /5 | /5 |
-| Code quality | /5 | /5 | /5 | /5 |
-| Completeness | /5 | /5 | /5 | /5 |
-| **Total** | **/25** | **/25** | **/25** | **/25** |
+| Criterion       | model-1 | model-2 | model-3 | model-4 |
+|-----------------|---------|---------|---------|---------|
+| Security        | /5      | /5      | /5      | /5      |
+| Correctness     | /5      | /5      | /5      | /5      |
+| Idempotency     | /5      | /5      | /5      | /5      |
+| Code quality    | /5      | /5      | /5      | /5      |
+| Completeness    | /5      | /5      | /5      | /5      |
+| **Total**       | **/25** | **/25** | **/25** | **/25** |
 
 ### Ranking
 
@@ -115,3 +118,18 @@ implementations? Be specific.
 
 For each implementation, state: would you deploy this on a production
 VPS as-is? If not, what are the blocking issues?
+
+---
+
+## Directory structure to rename before running
+
+Rename the real directories before launching this review:
+
+| Rename from | Rename to |
+|-------------|-----------|
+| opencode-bigpickle | model-1 |
+| claude | model-2 |
+| opencode-glm52 | model-3 |
+| opencode-deepseek4pro | model-4 |
+
+Restore after the review is complete.
