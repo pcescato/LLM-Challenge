@@ -65,4 +65,4 @@ The VPS manager implementations target Ubuntu 24.04 and include Caddy, PHP-FPM, 
 
 ## Article
 
-This benchmark was published as an article. [article link]
+This benchmark was published as an article. [Too cheap to be good? Think again.](https://dev.to/pascal_cescato_692b7a8a20/too-cheap-to-be-good-think-again-4nj0)
